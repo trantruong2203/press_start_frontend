@@ -2,11 +2,22 @@ import { Route, Routes, type RouteObject } from "react-router-dom";
 import Main from "../page/client/Main";
 import ProductsDetail from "../page/client/ProductsDetail";
 import Seller from "../page/client/seller/Seller";
+import PaymentSuccess from "../page/client/PaymentSuccess";
+import PaymentCancel from "../page/client/PaymentCancel";
+import ProductionDetail from "../page/client/production/ProductionDetail";
 
 const router = [
     {
         path: '/',
         element: <Main />,
+    },
+    {
+        path: '/payment-success',
+        element: <PaymentSuccess />,
+    },
+    {
+        path: '/payment-cancel',
+        element: <PaymentCancel />,
     },
     {
         path: '/products/:id',
@@ -19,6 +30,10 @@ const router = [
     {
         path: '*',
         element: null,
+    },
+    {
+        path: '/production-detail/:id',
+        element: <ProductionDetail />,
     }
 ]
 function renderRoutes(routeArray: RouteObject[]) {

@@ -8,6 +8,8 @@ import { store } from './store/store.ts'
 import AuthProvider from './contexts/AuthProvider.tsx'
 import AuthRouters from './router/AuthRouter.tsx'
 import Fetcher from '../Fetcher.tsx'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

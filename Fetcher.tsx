@@ -14,11 +14,13 @@ function Fetcher() {
     const dispatch = useDispatch<AppDispatch>();
     const { accountLogin } = useContext(ContextAuth);
     useEffect(() => {
-        dispatch(getUsers());
-        dispatch(getPlatformsThunk());
-        dispatch(getCategoriesThunk());
-        dispatch(getProductCateThunk());
-        dispatch(getAllProductsThunk());
+        Promise.all([
+            dispatch(getUsers()),
+            dispatch(getPlatformsThunk()),
+            dispatch(getCategoriesThunk()),
+            dispatch(getProductCateThunk()),
+            dispatch(getAllProductsThunk()),
+        ]);
         
     }, [dispatch, accountLogin?.email]);
     return null;

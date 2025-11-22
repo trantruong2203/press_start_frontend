@@ -4,6 +4,11 @@ import categoriesReducer from '../features/categories/CategoriesSlice'
 import productCateReducer from '../features/productcate/ProductCateSlice'
 import productReducer from '../features/production/ProductSlice'
 import platformReducer from '../features/platform/PlatformSlice'
+import sellerReducer from '../features/seller/SellerSlice'
+import accountPoolReducer from '../features/account_pool/AccountPoolSlices'
+import keyPoolReducer from '../features/key_pool/KeyPoolSlices'
+import cartItemsReducer from '../features/cart_items/CartItemsSlices'
+
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +17,10 @@ export const store = configureStore({
     productCate: productCateReducer,
     product: productReducer,
     platform: platformReducer,
+    seller: sellerReducer,
+    accountPool: accountPoolReducer,
+    keyPool: keyPoolReducer,
+    cartItems: cartItemsReducer,
   },
 })
 

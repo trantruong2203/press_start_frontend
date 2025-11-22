@@ -169,6 +169,6 @@ export const {
     setProduct, 
     resetProduct, 
     setEditingMode, 
-    clearError 
+    clearError
 } = productSlice.actions;
 export default productSlice.reducer;

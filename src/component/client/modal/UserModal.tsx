@@ -40,7 +40,7 @@ export default function UserModal({ openUserMenu, accountLogin, onClose }: UserM
             disableEnforceFocus
             disableRestoreFocus
         >
-            <div className='w-full max-w-md mx-auto bg-white rounded-lg'>
+            <div className='w-full max-w-md absolute top-20 right-20 bg-white rounded-lg'>
                     {/* Header */}
                     <div className="flex items-center justify-between p-4 border-b border-gray-200">
                         <div className="flex items-center space-x-3">
@@ -95,7 +95,14 @@ export default function UserModal({ openUserMenu, accountLogin, onClose }: UserM
                             fullWidth
                             variant="text"
                             startIcon={<MdContentPaste />}
-                            onClick={() => {}}
+                            onClick={() => {
+                                try {
+                                    navigate('/seller');
+                                    onClose();
+                                } catch (error) {
+                                    console.error('Navigation failed:', error);
+                                }
+                            }}
                             className="justify-start  hover:bg-gray-50 py-3"
                         >
                             <div >
@@ -107,7 +114,14 @@ export default function UserModal({ openUserMenu, accountLogin, onClose }: UserM
                             fullWidth
                             variant="text"
                             startIcon={<MdStore />}
-                            onClick={() => {navigate('/seller')}}
+                            onClick={() => {
+                                try {
+                                    navigate('/seller');
+                                    onClose();
+                                } catch (error) {
+                                    console.error('Navigation failed:', error);
+                                }
+                            }}
                             className="justify-start  hover:bg-gray-50 py-3"
                         >
                             <div >

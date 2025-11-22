@@ -47,6 +47,9 @@ const ProductTable: React.FC<{ handleDelete: (id: number) => void, handleEdit: (
         setPage(newPage);
     };
 
+    const convertDescription = (description: string) => {
+        return description.length > 100 ? description.slice(0, 100) + '...' : description;
+    }
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -78,7 +81,7 @@ const ProductTable: React.FC<{ handleDelete: (id: number) => void, handleEdit: (
                                     <TableRow key={p.id} hover>
                                         <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>{p.id}</TableCell>
                                         <TableCell align="center" sx={{ whiteSpace: 'nowrap' }}>{p.name}</TableCell>
-                                        <TableCell align="center">{p.description}</TableCell>
+                                        <TableCell align="center">{convertDescription(p.description)}</TableCell>
                                         <TableCell align="center">
                                             <img src={p.banner_url} alt={p.name} style={{ width: 100, height: 100, objectFit: 'cover' }} />
                                         </TableCell>

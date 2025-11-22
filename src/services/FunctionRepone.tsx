@@ -13,3 +13,9 @@ export const getObjectByPlatformId = (data: PlatformResponse[], platformId: numb
     return data?.find((e: PlatformResponse) => e.id === platformId);
 };
 
+export const formatCurrency = (value: number) =>
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+

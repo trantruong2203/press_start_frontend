@@ -99,11 +99,9 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
         }
 
         try {
-            // 显示预览
             const previewUrls = validFiles.map(file => URL.createObjectURL(file));
             setPreviewListImg(previewUrls);
 
-            // 上传所有图片到 Cloudinary
             const uploadPromises = validFiles.map(file => 
                 uploadImageToCloudinary(file, 'products/images')
             );

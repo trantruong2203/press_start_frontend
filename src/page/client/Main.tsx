@@ -6,6 +6,7 @@ import ThreeColumnsSection from '../../component/client/home/ThreeColumnsSection
 import GearsSection from '../../component/client/home/GearsSection';
 import LatestNewsSection from '../../component/client/home/LatestNewsSection';
 
+
 function Main() {
     const trailers = [
         { id: 't1', title: 'Ghost of Tsushima', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum.' },
@@ -37,9 +38,14 @@ function Main() {
         { id: 'ge3', title: 'Predator Monitor', price: '$125.75' },
         { id: 'ge4', title: 'Predator Casing', price: '$255.00' },
     ];
+   
+
+  
+
+
 
     return (
-        <div className="bg-zinc-900 min-h-screen">
+        <div className=" min-h-screen">
             <div className="mx-auto max-w-6xl px-4 py-6">
                 <BannerSlider />
                 <BestsellerSection />

@@ -2,6 +2,74 @@
 @import "tailwindcss";
 @import "@fontsource/roboto";
 
-body {
-    font-family: "Roboto";
+/* Global background theme */
+* {
+    box-sizing: border-box;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Roboto";
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    color: #e2e8f0;
+    overflow-x: hidden;
+}
+
+#root {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #06b6d4;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0891b2;
+}
+
+/* Global text colors */
+.text-primary {
+    color: #e2e8f0;
+}
+
+.text-accent {
+    color: #06b6d4;
+}
+
+.text-secondary {
+    color: #8b5cf6;
+}
+
+/* Global background utilities */
+.bg-primary {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+}
+
+.bg-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* Glow effects */
+.glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.glow-purple {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
