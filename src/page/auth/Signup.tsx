@@ -62,8 +62,8 @@ export default function Signup() {
 			await dispatch(createUser({email: form.email, password: form.password, username: form.displayName} as UserResponse)).unwrap();
 			setSuccessMsg('Tạo tài khoản thành công! Hãy kiểm tra email để xác minh tài khoản.');
 		} catch (err) {
-			console.error(err);
-			setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+			const apiMessage = typeof err === 'string' ? err : 'Đăng ký thất bại, vui lòng thử lại.';
+			setError(apiMessage);
 		} finally {
 			setSubmitting(false);
 		}

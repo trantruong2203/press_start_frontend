@@ -44,8 +44,8 @@ export const createUser = createAsyncThunk<UserResponse, UserResponse, { rejectV
   'user/create',
   async (account, { rejectWithValue }) => {
     try {
-      const response = await register(account);
-      return response;
+      await register(account);
+      return account;
     } catch (err: unknown) {
       return rejectWithValue(handleApiError(err));
     }

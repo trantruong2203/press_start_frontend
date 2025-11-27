@@ -26,18 +26,16 @@ export const login = async (account : LoginRequest): Promise<LoginResponse> => {
     return res.data.data;
 };
 
-export const register = async (account: UserResponse): Promise<UserResponse> => {
+export const register = async (account: UserResponse): Promise<void> => {
 	const payload = {
 		username: account.username,
 		password: account.password,
 		email: account.email,
-		phone: account.phone ?? '',
-		avatar: account.avatar ?? ''
 	};
 	const res = await axios.post(`${API}/users/create`, payload, {
 		withCredentials: true
 	});
-	return (res.data && (res.data.user ?? res.data)) as UserResponse;
+	return res.data.data;
 };
 
 export const updateUser = async (email: string, phone: string, avatar: string): Promise<UserResponse> => {
