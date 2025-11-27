@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
 import { getOjectByEmail } from "../../services/FunctionRepone";
 import { getAllCartItemsThunk } from "../../features/cart_items/CartItemsThunks";
+import { setCartOpen } from "../../features/cart_items/CartItemsSlices";
 import CartMenu from "./home/CartMenu";
 
 function Header({ handleOpen }: { handleOpen: () => void }) {
@@ -27,7 +28,7 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
   const { accountLogin } = useContext(ContextAuth);
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openCartMenu, setOpenCartMenu] = useState(false);
+  // const [openCartMenu, setOpenCartMenu] = useState(false); // Removed local state
   const navigate = useNavigate();
   const navigationItems = [
     {
@@ -60,6 +61,10 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
   const cartItems = useSelector(
     (state: RootState) => state.cartItems.cartItems
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isCartOpen = useSelector(
+    (state: RootState) => (state.cartItems as any).isCartOpen
+  );
   const products = useSelector((state: RootState) => state.product.products);
   const users = useSelector((state: RootState) => state.users.users);
   const userId = getOjectByEmail(users, accountLogin?.email ?? "")?.id;
@@ -71,17 +76,26 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
   }, [dispatch, accountLogin]);
 
   const cartItemsCount = useMemo(() => {
-    if (!userId || !Array.isArray(cartItems)) return 0;
-    return cartItems.filter((item) => item.user_id === userId).length;
+    if (!Array.isArray(cartItems)) return 0;
+    if (userId) {
+      return cartItems.filter((item) => item.user_id === userId).length;
+    }
+    return cartItems.filter((item) => item.user_id === 0).length;
   }, [cartItems, userId]);
 
   const userCartItems = useMemo(() => {
-    if (!userId || !Array.isArray(cartItems)) return [] as typeof cartItems;
-    return cartItems.filter((item) => item.user_id === userId);
+    if (!Array.isArray(cartItems)) return [] as typeof cartItems;
+    if (userId) {
+      return cartItems.filter((item) => item.user_id === userId);
+    }
+    return cartItems.filter((item) => item.user_id === 0);
   }, [cartItems, userId]);
 
   const productById = useMemo(() => {
-    const mapping: Record<number, { id: number; name?: string; banner_url?: string }> = {};
+    const mapping: Record<
+      number,
+      { id: number; name?: string; banner_url?: string }
+    > = {};
     (products ?? []).forEach((p) => {
       if (p && typeof (p as { id?: number }).id === "number") {
         const prod = p as { id: number; name?: string; banner_url?: string };
@@ -155,13 +169,18 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
 
             <div className="relative group">
               <Badge badgeContent={cartItemsCount} color="primary">
-                <button onClick={() => setOpenCartMenu(true)} className="px-4 py-1.5 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 border border-cyan-400/50 text-cyan-400 rounded-md hover:from-cyan-400/30 hover:to-blue-500/30 hover:border-cyan-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]">
+                <button
+                  onClick={() => dispatch(setCartOpen(true))}
+                  className="px-4 py-1.5 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 border border-cyan-400/50 text-cyan-400 rounded-md hover:from-cyan-400/30 hover:to-blue-500/30 hover:border-cyan-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]"
+                >
                   <FaShoppingCart className="inline-block mr-1.5 text-xs" />
                   <span className="font-medium text-sm">Giỏ hàng</span>
                 </button>
               </Badge>
               <div className="absolute z-50 right-2 mt-2 w-72 p-4 bg-white border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
-                <h3 className="font-semibold text-gray-800 mb-2">Giỏ hàng của bạn</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  Giỏ hàng của bạn
+                </h3>
                 {userCartItems.length === 0 ? (
                   <p className="text-gray-600 text-sm">Chưa có sản phẩm nào.</p>
                 ) : (
@@ -170,24 +189,40 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
                       {userCartItems.slice(0, 3).map((ci) => {
                         const p = productById[ci.product_id];
                         return (
-                          <li key={ci.id} className="flex items-center justify-between">
+                          <li
+                            key={ci.id}
+                            className="flex items-center justify-between"
+                          >
                             <div className="flex items-center gap-2 min-w-0">
                               {p?.banner_url ? (
-                                <img src={p.banner_url} alt={p?.name ?? "product"} className="w-8 h-8 rounded object-cover" />
+                                <img
+                                  src={p.banner_url}
+                                  alt={p?.name ?? "product"}
+                                  className="w-8 h-8 rounded object-cover"
+                                />
                               ) : (
                                 <div className="w-8 h-8 rounded bg-gray-200" />
                               )}
-                              <span className="text-gray-800 text-sm truncate max-w-[9rem]">{p?.name ?? `Sản phẩm #${ci.product_id}`}</span>
+                              <span className="text-gray-800 text-sm truncate max-w-[9rem]">
+                                {p?.name ?? `Sản phẩm #${ci.product_id}`}
+                              </span>
                             </div>
-                            <span className="text-gray-600 text-sm">x{ci.quantity}</span>
+                            <span className="text-gray-600 text-sm">
+                              x{ci.quantity}
+                            </span>
                           </li>
                         );
                       })}
                     </ul>
                     {userCartItems.length > 3 && (
-                      <div className="mt-2 text-right text-xs text-gray-500">+{userCartItems.length - 3} sản phẩm nữa</div>
+                      <div className="mt-2 text-right text-xs text-gray-500">
+                        +{userCartItems.length - 3} sản phẩm nữa
+                      </div>
                     )}
-                    <div onClick={() => setOpenCartMenu(true)} className="mt-3 inline-block w-full text-center px-3 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 transition">
+                    <div
+                      onClick={() => dispatch(setCartOpen(true))}
+                      className="mt-3 inline-block w-full text-center px-3 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 transition"
+                    >
                       Xem giỏ hàng
                     </div>
                   </div>
@@ -335,10 +370,10 @@ function Header({ handleOpen }: { handleOpen: () => void }) {
       )}
 
       <CartMenu
-      open={openCartMenu}
-      onClose={() => setOpenCartMenu(false)}
-      userCartItems={userCartItems}
-      productById={productById}
+        open={!!isCartOpen}
+        onClose={() => dispatch(setCartOpen(false))}
+        userCartItems={userCartItems}
+        productById={productById}
       />
     </header>
   );

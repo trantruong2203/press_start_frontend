@@ -61,10 +61,10 @@ function BannerSlider() {
                 </div>
             </Box>
 
-            <IconButton onClick={() => go(-1)} className="!absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white">
+            <IconButton onClick={() => go(-1)} className="!absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white !z-20">
                 <FaChevronLeft />
             </IconButton>
-            <IconButton onClick={() => go(1)} className="!absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white">
+            <IconButton onClick={() => go(1)} className="!absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white !z-20">
                 <FaChevronRight />
             </IconButton>
 
@@ -82,4 +82,4 @@ function BannerSlider() {
     );
 }
 
-export default BannerSlider; 
+export default BannerSlider;

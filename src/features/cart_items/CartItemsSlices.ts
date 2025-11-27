@@ -6,6 +6,8 @@ interface CartItemsState {
     cartItems: CartItemsResponse[];
     cartItem: {
         id?: number;
+        user_id: number;
+        email: string;
         product_id: number;
         quantity: number;
         status: boolean;
@@ -15,9 +17,12 @@ interface CartItemsState {
     error: string | null;
     searchKeyword: string;
     isEditing: boolean;
+    isCartOpen: boolean;
 }
 
 const innerValue = {
+    user_id: 0,
+    email: "",
     product_id: 0,
     quantity: 0,
     status: true,
@@ -33,6 +38,7 @@ const cartItemsSlice = createSlice({
         error: null,
         searchKeyword: "",
         isEditing: false,
+        isCartOpen: false,
     } as CartItemsState,
     reducers: {
         setSearchKeyword: (state, action) => {
@@ -40,16 +46,35 @@ const cartItemsSlice = createSlice({
         },
         handleChange: (state, action) => {
             state.cartItem = {
-                ...state.cartItems,
+                ...state.cartItem,
                 ...action.payload,
             };
         },
         setCartItems: (state, action) => {
             state.cartItem = {
-                ...state.cartItems,
+                ...state.cartItem,
                 ...action.payload,
             };
-        }
+        },
+        setCartOpen: (state, action) => {
+            state.isCartOpen = action.payload;
+        },
+        addToLocalCart: (state, action) => {
+            const newItem = action.payload;
+            const existingItem = state.cartItems.find(
+                (item) => item.product_id === newItem.product_id && item.user_id === 0
+            );
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                state.cartItems.push({
+                    ...newItem,
+                    id: Date.now(), // Temporary ID
+                    user_id: 0,
+                    created_at: new Date().toISOString(),
+                });
+            }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -137,5 +162,5 @@ const cartItemsSlice = createSlice({
     }
 });
 
-export const { setSearchKeyword, handleChange, setCartItems } = cartItemsSlice.actions;
+export const { setSearchKeyword, handleChange, setCartItems, setCartOpen, addToLocalCart } = cartItemsSlice.actions;
 export default cartItemsSlice.reducer;

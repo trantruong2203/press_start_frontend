@@ -1,13 +1,40 @@
-
-import { Card, CardMedia, CardContent, CardActions, Button, Chip, Tooltip, Typography } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Button,
+  Chip,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { FaPlay, FaHeart, FaShoppingCart } from "react-icons/fa";
 import type { SellerResponse } from "../../../interface/SellerResponse";
 import type { ProductResponse } from "../../../interface/ProductResponse";
-function CardItems({ it, sellers, hasDiscount, discounted, formatCurrency, handleAddToCart }: { it: ProductResponse; sellers: SellerResponse[]; hasDiscount: boolean; discounted: number; formatCurrency: (value: number | string) => string; handleAddToCart: (productId: number) => void }) {
+import { useNavigate } from "react-router-dom";
+
+function CardItems({
+  it,
+  sellers,
+  hasDiscount,
+  discounted,
+  formatCurrency,
+  handleAddToCart,
+}: {
+  it: ProductResponse;
+  sellers: SellerResponse[];
+  hasDiscount: boolean;
+  discounted: number;
+  formatCurrency: (value: number | string) => string;
+  handleAddToCart: (productId: number) => void;
+}) {
+
+  const navigate = useNavigate();
+  
   return (
     <div>
       <Card className="bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl overflow-hidden group">
-        <div className="relative">
+        <div className="relative cursor-pointer" onClick={() => navigate(`/production-detail/${it.id}`)}>
           <CardMedia
             component="div"
             className="h-48 bg-zinc-800 bg-cover bg-center rounded-2xl"
@@ -16,12 +43,12 @@ function CardItems({ it, sellers, hasDiscount, discounted, formatCurrency, handl
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
             <Tooltip title="Xem trailer">
-              <button className="h-10 w-10 rounded-full bg-cyan-500/90 hover:bg-cyan-400 text-white grid place-items-center shadow-lg">
+              <button className="cursor-pointer h-10 w-10 rounded-full bg-cyan-500/90 hover:bg-cyan-400 text-white grid place-items-center shadow-lg">
                 <FaPlay size={14} />
               </button>
             </Tooltip>
             <Tooltip title="Yêu thích">
-              <button className="h-10 w-10 rounded-full bg-fuchsia-600/90 hover:bg-fuchsia-500 text-white grid place-items-center shadow-lg">
+              <button className="cursor-pointer h-10 w-10 rounded-full bg-fuchsia-600/90 hover:bg-fuchsia-500 text-white grid place-items-center shadow-lg">
                 <FaHeart size={14} />
               </button>
             </Tooltip>
@@ -55,7 +82,6 @@ function CardItems({ it, sellers, hasDiscount, discounted, formatCurrency, handl
             />
           )}
         </div>
-
         <CardContent className="text-white">
           <Typography className="font-semibold text-white line-clamp-1">
             {it.name}
@@ -97,6 +123,18 @@ function CardItems({ it, sellers, hasDiscount, discounted, formatCurrency, handl
             }}
           >
             Thêm vào giỏ
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="primary"
+            className="!rounded-full !bg-gradient-to-r !from-fuchsia-600 !to-cyan-500 hover:!brightness-110"
+            startIcon={<FaHeart />}
+            onClick={() => {
+              navigate(`/production-detail/${it.id}`);
+            }}
+          >
+            Mua Ngay
           </Button>
           <div className="text-xs text-zinc-400">
             {sellers.find(

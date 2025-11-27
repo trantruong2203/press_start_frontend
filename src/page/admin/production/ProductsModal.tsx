@@ -14,6 +14,7 @@ import { FaFileImage } from 'react-icons/fa';
 import toast from "react-hot-toast";
 import type { Dispatch, SetStateAction } from 'react';
 import { uploadImageToCloudinary } from '../../../config/CloundinaryConfig';
+import { MdCancel } from 'react-icons/md';
 
 const style = {
     position: 'absolute',
@@ -115,6 +116,16 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
         }
     };
 
+    const handleRemoveImage = (indexToRemove: number) => {
+        const newPreviewList = previewListImg.filter((_, index) => index !== indexToRemove);
+        setPreviewListImg(newPreviewList);
+        
+        const newListImg = product.listImg?.filter((_, index) => index !== indexToRemove) || [];
+        dispatch(handleChange({ ...product, listImg: newListImg } as unknown as CreateProductRequest));
+        
+        toast.success('Đã xóa ảnh');
+    };
+
     return (
         <div>
             <Modal
@@ -132,8 +143,23 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
                             <Box>
                                 <Stack spacing={2}>
-                                    <TextField label="Tên sản phẩm" name="name" fullWidth value={product.name} onChange={onInputChange} />
-                                    <TextField label="Mô tả" name="description" fullWidth multiline minRows={3} value={product.description} onChange={onInputChange} />
+                                    <TextField 
+                                    label="Tên sản phẩm" 
+                                    name="name" 
+                                    fullWidth 
+                                    value={product.name} 
+                                    onChange={onInputChange} 
+                                    />
+                                    <TextField 
+                                    label="Mô tả" 
+                                    name="description" 
+                                    fullWidth 
+                                    multiline 
+                                    minRows={3} 
+                                    value={product.description} 
+                                    onChange={onInputChange} 
+                                    className='line-clamp-3'
+                                    />
                                     <FormControlLabel
                                         control={
                                             <Switch
@@ -149,7 +175,7 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
                                 </Stack>
                                 <Stack spacing={2}>
                                     <Autocomplete
-                                        disablePortal
+                                            disablePortal
                                         options={platforms || []}
                                         value={platforms.find(p => String(p.id) === String(product.platform_id)) ?? null}
                                         getOptionLabel={(option) => option.name}
@@ -182,8 +208,15 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
                                     
                                 </Stack>
                             </Box>
-                            <Box>
-                            <Stack direction="row" spacing={2} alignItems="center">
+                            <Box >
+                                <Stack direction="row" spacing={4} alignItems="center">
+                                    <TextField
+                                        label="Trailer URL  "
+                                        value={product.trailer_url}
+                                        onChange={(e) => dispatch(handleChange({ ...product, trailer_url: e.target.value } as unknown as CreateProductRequest))}
+                                    />  
+                                </Stack>
+                            <Stack direction="row" spacing={4} alignItems="center" className="mt-4">
                                         <Button
                                             component="label"
                                             role={undefined}
@@ -205,12 +238,13 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
                                         )}
                                     </Stack>
 
-                                    <Stack direction="row" spacing={2} alignItems="center">
+                                    <Stack spacing={2} className="mt-4">
                                         <Button
                                             component="label"
                                             role={undefined}
                                             variant="outlined"
                                             startIcon={<FaFileImage />}
+                                            sx={{ alignSelf: 'flex-start' }}
                                         >
                                             Tải lên danh sách ảnh
                                             <VisuallyHiddenInput
@@ -220,14 +254,66 @@ export default function ProductsModal({ open, handleClose, handleUpdate, handleS
                                             />
                                         </Button>
                                         {(previewListImg?.length ?? 0) > 0 && (
-                                            (previewListImg ?? []).map((image, index) => (
-                                                <img
-                                                    src={image}
-                                                    alt={`preview-${index}`}
-                                                    key={index}
-                                                    style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8, border: '1px solid #eee' }}
-                                                />
-                                            ))
+                                            <Box sx={{ 
+                                                display: 'flex', 
+                                                flexWrap: 'wrap', 
+                                                gap: 1,
+                                                maxHeight: '200px',
+                                                overflowY: 'auto',
+                                                p: 1,
+                                                border: '1px solid #eee',
+                                                borderRadius: 1
+                                            }}>
+                                                {(previewListImg ?? []).map((image, index) => (
+                                                    <Box 
+                                                        key={index}
+                                                        sx={{ 
+                                                            position: 'relative',
+                                                            width: 64,
+                                                            height: 64,
+                                                            '&:hover .delete-btn': {
+                                                                opacity: 1
+                                                            }
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={image}
+                                                            alt={`preview-${index}`}
+                                                            style={{ 
+                                                                width: '100%', 
+                                                                height: '100%', 
+                                                                objectFit: 'cover', 
+                                                                borderRadius: 8, 
+                                                                border: '1px solid #ddd',
+                                                                display: 'block'
+                                                            }}
+                                                        />
+                                                        <Box
+                                                            className="delete-btn"
+                                                            onClick={() => handleRemoveImage(index)}
+                                                            sx={{
+                                                                position: 'absolute',
+                                                                top: -8,
+                                                                right: -8,
+                                                                opacity: 0,
+                                                                transition: 'opacity 0.2s',
+                                                                cursor: 'pointer',
+                                                                backgroundColor: 'white',
+                                                                borderRadius: '50%',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                boxShadow: 1,
+                                                                '&:hover': {
+                                                                    backgroundColor: '#f5f5f5'
+                                                                }
+                                                            }}
+                                                        >
+                                                            <MdCancel size={20} color="#d32f2f" />
+                                                        </Box>
+                                                    </Box>
+                                                ))}
+                                            </Box>
                                         )}
                                     </Stack>
                             </Box>

@@ -55,7 +55,7 @@ const PaymentButton = () => {
         body: JSON.stringify({
           buyer_id: userId,
           order_code: orderCode.toString(),
-          total: 2000,
+          total: totalPrice,
           status: false, 
         }),
       });

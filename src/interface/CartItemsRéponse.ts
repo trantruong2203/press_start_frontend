@@ -8,6 +8,7 @@ export interface CartItemsResponse {
 
 export interface CreateCartItemsRequest {
     user_id: number;
+    email: string;
     product_id: number;
     quantity: number;
 }

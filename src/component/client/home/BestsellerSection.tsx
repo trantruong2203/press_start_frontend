@@ -10,7 +10,6 @@ import { ContextAuth } from "../../../contexts/AuthContext";
 import { getOjectByEmail } from "../../../services/FunctionRepone";
 import toast from "react-hot-toast";
 import CardItems from "./CardItems";
-import { NavLink } from "react-router-dom";
 
 function BestsellerSection() {
   const dispatch = useDispatch();
@@ -59,6 +58,7 @@ function BestsellerSection() {
           product_id: productId,
           quantity: 1,
           user_id: userInfo?.id ?? 0,
+          email: userInfo?.email ?? "",
         })
       );
       toast.success("Thêm vào giỏ hàng thành công");
@@ -93,7 +93,6 @@ function BestsellerSection() {
             );
             return (
               <div key={it.id} className="group relative rounded-2xl p-[1px] bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-emerald-400 shadow-[0_0_30px_-10px_rgba(168,85,247,0.6)] hover:shadow-[0_0_40px_-6px_rgba(34,211,238,0.8)] transition-shadow">
-                <NavLink to={`/production-detail/${it.id}`}>
                   <CardItems
                     it={it}
                     sellers={sellers}
@@ -103,7 +102,6 @@ function BestsellerSection() {
                     handleAddToCart={handleAddToCart}
                   />
                   <div className="pointer-events-none absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-emerald-400 opacity-0 blur-lg transition-opacity group-hover:opacity-30" />
-                </NavLink>
               </div>
             );
           })}
