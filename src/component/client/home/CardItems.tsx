@@ -25,50 +25,57 @@ function CardItems({
   sellers: SellerResponse[];
   hasDiscount: boolean;
   discounted: number;
-  formatCurrency: (value: number | string) => string;
+  formatCurrency: (value: number) => string;
   handleAddToCart: (productId: number) => void;
 }) {
-
   const navigate = useNavigate();
-  
+
   return (
-    <div>
-      <Card className="bg-zinc-900/90 backdrop-blur border border-zinc-800 rounded-2xl overflow-hidden group">
-        <div className="relative cursor-pointer" onClick={() => navigate(`/production-detail/${it.id}`)}>
+    <div className="h-full  ">
+      <Card className="h-full flex flex-col bg-gradient-to-br from-zinc-900/95 via-zinc-900/90 to-zinc-800/95 backdrop-blur-xl overflow-hidden group transition-all duration-500">
+        <div
+          className="relative cursor-pointer overflow-hidden"
+          onClick={() => navigate(`/production-detail/${it.id}`)}
+        >
           <CardMedia
             component="div"
-            className="h-48 bg-zinc-800 bg-cover bg-center rounded-2xl"
+            className="h-56 bg-zinc-800 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
             style={{ backgroundImage: `url(${it.banner_url})` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute bottom-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-            <Tooltip title="Xem trailer">
-              <button className="cursor-pointer h-10 w-10 rounded-full bg-cyan-500/90 hover:bg-cyan-400 text-white grid place-items-center shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          {/* Action Buttons */}
+          <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+            <Tooltip title="Xem trailer" arrow>
+              <button className="cursor-pointer h-11 w-11 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white grid place-items-center shadow-lg shadow-cyan-500/50 hover:shadow-xl hover:shadow-cyan-500/70 transition-all duration-300 hover:scale-110 active:scale-95">
                 <FaPlay size={14} />
               </button>
             </Tooltip>
-            <Tooltip title="Yêu thích">
-              <button className="cursor-pointer h-10 w-10 rounded-full bg-fuchsia-600/90 hover:bg-fuchsia-500 text-white grid place-items-center shadow-lg">
+            <Tooltip title="Yêu thích" arrow>
+              <button className="cursor-pointer h-11 w-11 rounded-full bg-gradient-to-br from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 text-white grid place-items-center shadow-lg shadow-fuchsia-500/50 hover:shadow-xl hover:shadow-fuchsia-500/70 transition-all duration-300 hover:scale-110 active:scale-95">
                 <FaHeart size={14} />
               </button>
             </Tooltip>
           </div>
+
+          {/* Stock Badge */}
           <Chip
-            label={`Stock: ${
+            label={`Kho: ${
               sellers.find(
                 (seller: SellerResponse) => seller.product_id === it.id
               )?.stock ?? 0
             }`}
-            color={
+            size="small"
+            className={`!absolute !left-3 !top-3 !font-semibold !text-white !shadow-lg !backdrop-blur-sm ${
               sellers.find(
                 (seller: SellerResponse) => seller.product_id === it.id
               )?.stock ?? 0 > 0
-                ? "success"
-                : "warning"
-            }
-            size="small"
-            className="!absolute !left-3 !top-3 !bg-emerald-500/90 !text-white"
+                ? "!bg-gradient-to-r !from-emerald-500 !to-green-600"
+                : "!bg-gradient-to-r !from-orange-500 !to-red-600"
+            }`}
           />
+
+          {/* Discount Badge */}
           {hasDiscount && (
             <Chip
               label={`-${
@@ -76,20 +83,24 @@ function CardItems({
                   (seller: SellerResponse) => seller.product_id === it.id
                 )?.discount ?? 0
               }%`}
-              color="error"
               size="small"
-              className="!absolute !right-3 !top-3 !bg-rose-600 !text-white"
+              className="!absolute !right-3 !top-3 !bg-gradient-to-r !from-rose-600 !to-red-700 !text-white !font-bold !shadow-lg !backdrop-blur-sm animate-pulse"
             />
           )}
         </div>
-        <CardContent className="text-white">
-          <Typography className="font-semibold text-white line-clamp-1">
+
+        {/* Card Content */}
+        <CardContent className="flex-1 text-white p-2 space-y-2">
+          <Typography className="font-bold text-lg text-white line-clamp-2 group-hover:text-cyan-300 transition-colors duration-300">
             {it.name}
           </Typography>
-          <div className="mt-1 flex items-end gap-3">
+
+          <div className="flex items-center gap-3">
             <Typography
-              className={`text-sm ${
-                hasDiscount ? "text-emerald-300 font-bold" : "text-cyan-300"
+              className={`text-xl font-extrabold ${
+                hasDiscount
+                  ? "text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-500"
+                  : "text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"
               }`}
             >
               {hasDiscount
@@ -101,7 +112,7 @@ function CardItems({
                   )}
             </Typography>
             {hasDiscount && (
-              <Typography className="text-zinc-400 text-xs line-through">
+              <Typography className="text-zinc-500 text-sm line-through">
                 {formatCurrency(
                   sellers.find(
                     (seller: SellerResponse) => seller.product_id === it.id
@@ -112,12 +123,13 @@ function CardItems({
           </div>
         </CardContent>
 
-        <CardActions className="px-4 pb-4 flex items-center justify-between">
+        {/* Card Actions */}
+        <CardActions className="px-2 pb-5 flex flex-col gap-3">
           <Button
+            fullWidth
             variant="contained"
-            color="primary"
-            className="!rounded-full !bg-gradient-to-r !from-fuchsia-600 !to-cyan-500 hover:!brightness-110"
-            startIcon={<FaShoppingCart />}
+            className="!rounded-xl !py-3 !bg-gradient-to-r !from-fuchsia-600 !via-purple-600 !to-cyan-500 hover:!from-fuchsia-500 hover:!via-purple-500 hover:!to-cyan-400 !shadow-lg !shadow-purple-500/50 hover:!shadow-xl hover:!shadow-purple-500/70 !transition-all !duration-300 hover:!scale-105 active:!scale-95 !font-bold !text-base"
+            startIcon={<FaShoppingCart className="text-lg" />}
             onClick={() => {
               handleAddToCart(it.id);
             }}
@@ -126,23 +138,16 @@ function CardItems({
           </Button>
 
           <Button
+            fullWidth
             variant="outlined"
-            color="primary"
-            className="!rounded-full !bg-gradient-to-r !from-fuchsia-600 !to-cyan-500 hover:!brightness-110"
-            startIcon={<FaHeart />}
+            className="!rounded-xl !py-3 !border-2 !border-cyan-500/50 !text-cyan-400 hover:!bg-cyan-500/10 hover:!border-cyan-400 !shadow-md hover:!shadow-lg hover:!shadow-cyan-500/30 !transition-all !duration-300 hover:!scale-105 active:!scale-95 !font-semibold !text-base"
+            startIcon={<FaHeart className="text-lg" />}
             onClick={() => {
               navigate(`/production-detail/${it.id}`);
             }}
           >
             Mua Ngay
           </Button>
-          <div className="text-xs text-zinc-400">
-            {sellers.find(
-              (seller: SellerResponse) => seller.product_id === it.id
-            )?.stock ?? 0 > 0
-              ? "Còn hàng"
-              : "Hết hàng"}
-          </div>
         </CardActions>
       </Card>
     </div>
